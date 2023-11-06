@@ -1,32 +1,43 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <string.h>
 
-char *init()
+#define USAGESTR "USAGE: ./doom FILE\n"
+
+char template[] = "/tmp/doom.XXXXXX";
+
+void init()
 {
-  char template[] = "/tmp/doom.XXXXXX";
   char *dir_name = mkdtemp(template);
 
   if(dir_name == NULL)
   {
     perror("mkdtemp failed: ");
-    return 0;
+    exit(1);
   }
-
-  return dir_name;
 }
 
-void terminate(char *dir_name)
+void terminate()
 {
-  if(rmdir(dir_name) == -1)
+  if(rmdir(template) == -1)
   {
     perror("rmdir failed: ");
+    exit(1);
   }
 }
 
-int main()
+int main(int argc, char **argv)
 {
-  char *s = init();
-  print("%s\n", s);
-  terminate(s);
+  if(argc <= 1)
+  {
+    printf(USAGESTR);
+    return 1;
+  }
+
+  char *fname = argv[1];
+  puts(fname);
+  init();
+  puts(template);
+  terminate();
 }

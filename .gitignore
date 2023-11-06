@@ -1,4 +1,7 @@
 doom
+*~
+*.swp
+*.sw*
 # Prerequisites
 *.d
 

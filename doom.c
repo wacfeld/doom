@@ -17,7 +17,12 @@ char latex_footer[] = "\n\\end{document}\n";
 
 char tmpdir[] = "/tmp/doom.XXXXXX";
 char *texfname;
-char *pdffname; // need this to pass it to mupdf
+// pass this to mupdf
+char *pdffname;
+
+// need these also for calling remove()
+char *auxfname;
+char *logfname;
 
 void init_dir()
 {
@@ -157,6 +162,9 @@ void cleanup()
   endwin();
 
   remove(texfname);
+  remove(pdffname);
+  remove(auxfname);
+  remove(logfname);
   terminate_dir();
 }
 
@@ -181,9 +189,11 @@ int main(int argc, char **argv)
   chdir(tmpdir);
   puts(tmpdir);
 
-  // create tex file
+  // create filenames
   asprintf(&texfname, "%s/file.tex", tmpdir);
   asprintf(&pdffname, "%s/file.pdf", tmpdir);
+  asprintf(&auxfname, "%s/file.aux", tmpdir);
+  asprintf(&logfname, "%s/file.log", tmpdir);
 
   init_ncurses();
 

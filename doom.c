@@ -17,6 +17,7 @@ char latex_footer[] = "\n\\end{document}\n";
 
 char tmpdir[] = "/tmp/doom.XXXXXX";
 char *texfname;
+char *pdffname; // need this to pass it to mupdf
 
 void init_dir()
 {
@@ -73,7 +74,7 @@ void writef(char *fname, const char *fmt, ...)
 int build()
 {
   char *cmd;
-  asprintf(&cmd, "pdflatex %s >/dev/null 2>&1", texfname);
+  asprintf(&cmd, "pdflatex %s 1>/dev/null 2>/dev/null", texfname);
   mvprintw(2,0,cmd);
   return system(cmd);
 }
@@ -81,14 +82,25 @@ int build()
 // start pdf viewer using fork()/exec() and return its PID
 pid_t start_viewer()
 {
+  pid_t child_pid;
 
+  // parent
+  if((child_pid = fork()))
+  {}
+
+  // child
+  else
+  {
+    execlp("mupdf", "mupdf", pdffname, (char*)NULL);
+  }
+  return child_pid;
 }
 
 // tell the pdf viewer process to redisplay the file
 // in the case of mupdf this means sending SIGHUP to it
 void update_viewer(pid_t pid)
 {
-
+  kill(pid, SIGHUP);
 }
 
 // s1 is dynamically allocated pointer
@@ -161,6 +173,7 @@ int main(int argc, char **argv)
 
   // create tex file
   asprintf(&texfname, "%s/file.tex", tmpdir);
+  asprintf(&pdffname, "%s/file.pdf", tmpdir);
 
   init_ncurses();
 
@@ -168,16 +181,39 @@ int main(int argc, char **argv)
   char *buf = malloc(bufmax);
   *buf = '\0';
 
+  int viewer_open = 0;
+  pid_t viewer_pid;
+
   while(1)
   {
+    // print buffer & info
     mvprintw(0,0, buf);
     mvprintw(1,0,texfname);
+    
+    // get input from user
     char c = getch();
-    move(0,0);
+    erase();
+
+    // append to buffer & write to file
     buf = append(buf, c, &bufmax);
     writef(texfname, "%s%s%s", latex_header, buf, latex_footer);
-    mvprintw(3,0,"%d", build());
-    clrtoeol();
+
+    // build
+    int code = build();
+    mvprintw(3,0,"%d", code);
+
+    if(viewer_open)
+    {
+      update_viewer(viewer_pid);
+    }
+
+    // open viewer if not already open
+    if(!viewer_open)
+    {
+      viewer_pid = start_viewer();
+      mvprintw(6,0,"%d",viewer_pid);
+      viewer_open = 1;
+    }
   }
 
   cleanup();

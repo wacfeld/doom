@@ -9,7 +9,9 @@
 
 #define USAGESTR "USAGE: ./doom FILE"
 
-char latex_header[] = "\\begin{document}\n";
+char latex_header[] =
+  "\\documentclass{article}\n"
+  "\\begin{document}\n";
 
 char latex_footer[] = "\n\\end{document}\n";
 
@@ -65,6 +67,28 @@ void writef(char *fname, const char *fmt, ...)
   va_end(args);
 
   fclose(fp);
+}
+
+// call pdflatex on file using system() and return the exit code
+int build()
+{
+  char *cmd;
+  asprintf(&cmd, "pdflatex %s >/dev/null 2>&1", texfname);
+  mvprintw(2,0,cmd);
+  return system(cmd);
+}
+
+// start pdf viewer using fork()/exec() and return its PID
+pid_t start_viewer()
+{
+
+}
+
+// tell the pdf viewer process to redisplay the file
+// in the case of mupdf this means sending SIGHUP to it
+void update_viewer(pid_t pid)
+{
+
 }
 
 // s1 is dynamically allocated pointer
@@ -132,6 +156,7 @@ int main(int argc, char **argv)
 
   // create temp directory
   init_dir();
+  chdir(tmpdir);
   puts(tmpdir);
 
   // create tex file
@@ -151,6 +176,7 @@ int main(int argc, char **argv)
     move(0,0);
     buf = append(buf, c, &bufmax);
     writef(texfname, "%s%s%s", latex_header, buf, latex_footer);
+    mvprintw(3,0,"%d", build());
     clrtoeol();
   }
 

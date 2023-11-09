@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -g -MMD -Wall -Wshadow
+CFLAGS = -g -MMD -Wall -Wshadow -lncurses
 EXEC = doom
 LIBS = 
 OBJECTS = doom.o

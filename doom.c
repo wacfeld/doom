@@ -203,10 +203,11 @@ int main(int argc, char **argv)
     mvprintw(1,0,texfname);
     
     // get input from user
-    char c = getch();
-    mvprintw(10,0,"the CODE RECEIVED is %d",c);
-    sleep(1);
+    unsigned char c = getch();
     erase();
+    mvprintw(10,0,"the CODE RECEIVED is %d",c);
+    if(c >= 128)
+      continue;
 
     // append to buffer & write to file
     buf = append(buf, c, &bufmax);

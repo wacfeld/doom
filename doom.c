@@ -1,5 +1,6 @@
 #define __STDC_WANT_LIB_EXT2__ 1
 #include <stdio.h>
+#include <signal.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
@@ -8,7 +9,12 @@
 
 #define USAGESTR "USAGE: ./doom FILE"
 
+char latex_header[] = "\\begin{document}\n";
+
+char latex_footer[] = "\n\\end{document}\n";
+
 char tmpdir[] = "/tmp/doom.XXXXXX";
+char *texfname;
 
 void init_dir()
 {
@@ -44,7 +50,7 @@ void terminate_ncurses()
 	endwin();
 }
 
-void write_to_file(char *fname, char *txt)
+void writef(char *fname, const char *fmt, ...)
 {
   FILE *fp = fopen(fname, "w");
   if(!fp)
@@ -53,7 +59,10 @@ void write_to_file(char *fname, char *txt)
     exit(1);
   }
 
-  fputs(txt, fp);
+  va_list args;
+  va_start(args, fmt);
+  vfprintf(fp, fmt, args);
+  va_end(args);
 
   fclose(fp);
 }
@@ -95,8 +104,26 @@ char *append(char *s, char c, int *max)
   return s;
 }
 
+void cleanup()
+{
+  terminate_ncurses();
+  refresh();
+  endwin();
+
+  remove(texfname);
+  terminate_dir();
+}
+
+void handle_sigint(int sig)
+{
+  cleanup();
+  exit(0);
+}
+
 int main(int argc, char **argv)
 {
+  signal(SIGINT, handle_sigint);
+
   // if(argc <= 1)
   // {
   //   puts(USAGESTR);
@@ -108,8 +135,7 @@ int main(int argc, char **argv)
   puts(tmpdir);
 
   // create tex file
-  char *dest;
-  asprintf(&dest, "%s/file.tex", tmpdir);
+  asprintf(&texfname, "%s/file.tex", tmpdir);
 
   init_ncurses();
 
@@ -120,19 +146,13 @@ int main(int argc, char **argv)
   while(1)
   {
     mvprintw(0,0, buf);
+    mvprintw(1,0,texfname);
     char c = getch();
     move(0,0);
     buf = append(buf, c, &bufmax);
+    writef(texfname, "%s%s%s", latex_header, buf, latex_footer);
     clrtoeol();
   }
 
-  terminate_ncurses();
-
-  // destroy files
-
-  // destroy temp directory
-  terminate_dir();
-	refresh();
-	endwin();
-
+  cleanup();
 }

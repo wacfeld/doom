@@ -96,6 +96,16 @@ pid_t start_viewer()
   return child_pid;
 }
 
+int viewer_alive(pid_t pid)
+{
+  int val = kill(pid, 0);
+  if(val == 0)
+    return 1;
+
+  else
+    return 0;
+}
+
 // tell the pdf viewer process to redisplay the file
 // in the case of mupdf this means sending SIGHUP to it
 void update_viewer(pid_t pid)
@@ -181,17 +191,21 @@ int main(int argc, char **argv)
   char *buf = malloc(bufmax);
   *buf = '\0';
 
-  int viewer_open = 0;
-  pid_t viewer_pid;
+  pid_t viewer_pid = -1;
+
+  int x = 0;
 
   while(1)
   {
+    //mvprintw(10,0,"%d idiot", x++);
     // print buffer & info
     mvprintw(0,0, buf);
     mvprintw(1,0,texfname);
     
     // get input from user
     char c = getch();
+    mvprintw(10,0,"the CODE RECEIVED is %d",c);
+    sleep(1);
     erase();
 
     // append to buffer & write to file
@@ -202,17 +216,17 @@ int main(int argc, char **argv)
     int code = build();
     mvprintw(3,0,"%d", code);
 
-    if(viewer_open)
+    // update viewer if open
+    if(viewer_pid != -1 && viewer_alive(viewer_pid))
     {
       update_viewer(viewer_pid);
     }
 
     // open viewer if not already open
-    if(!viewer_open)
+    else
     {
       viewer_pid = start_viewer();
       mvprintw(6,0,"%d",viewer_pid);
-      viewer_open = 1;
     }
   }
 

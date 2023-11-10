@@ -6,6 +6,7 @@
 #include <string.h>
 #include <termios.h>
 #include <ncurses.h>
+#include <sys/wait.h>
 
 #define USAGESTR "USAGE: ./doom FILE"
 
@@ -226,6 +227,10 @@ int main(int argc, char **argv)
     // build
     int code = build();
     mvprintw(3,0,"%d", code);
+
+    // allow viewer to exit if something closes it
+    int status;
+    waitpid(viewer_pid, &status, WNOHANG);
 
     // update viewer if open
     if(viewer_pid != -1 && viewer_alive(viewer_pid))

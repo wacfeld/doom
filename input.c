@@ -1,3 +1,7 @@
+#define __STDC_WANT_LIB_EXT2__ 1
+
+#include <ctype.h>
+
 #include "input.h"
 
 Mode mode = NORMAL;
@@ -14,9 +18,25 @@ void handle_key(unsigned char key)
 
 }
 
+int is_special(unsigned char c)
+{
+  // TODO make this more complete
+  return !(isalnum(c) || isspace(c));
+}
+
 void handle_insert(unsigned char key)
 {
-  
+  if(is_special(key))
+  {
+    
+  }
+  else
+  {
+    char *s;
+    asprintf(&s, "%c", key);
+    Element *e = makeElement(NULL, SYMB, s);
+    insertLeft(e, cur_element);
+  }
 }
 
 void handle_normal(unsigned char key)

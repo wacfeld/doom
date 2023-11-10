@@ -5,7 +5,7 @@
 
 Element *makeElement(Element *parent, Type type, char *s)
 {
-  Element *e = malloc(sizeof(Element));
+  Element *e = calloc(1, sizeof(Element));
   e->type = type;
   e->parent = parent;
   
@@ -39,10 +39,23 @@ Element *makeElement(Element *parent, Type type, char *s)
   else if(type == SYMB)
   {
     e->s = s;
-    e->nch = 0;
   }
 
   return e;
+}
+
+// recursively deallocate an element and all its fields
+void destroyElement(Element *e)
+{
+  // destroy all its children
+  for(int i = 0; i < e->nch; i++)
+    destroyElement(e->children[i]);
+
+  // destroy the children array
+  free(e->children);
+  
+  // destroy the string
+  free(e->s);
 }
 
 int getIndex(Element *parent, Element *child)
@@ -128,6 +141,9 @@ void insertLeft(Element *new, Element *old)
     // insert & increment length
     parent->children[oldind] = new;
     parent->nch++;
+
+    // reparent new element
+    new->parent = parent;
   }
 }
 

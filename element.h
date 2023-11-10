@@ -24,6 +24,8 @@ char *element2str(Element *e);
 Element *leftOf(Element *e);
 Element *rightOf(Element *e);
 
+void insertLeft(Element *new, Element *old);
+
 // state variables
 Element *root;
 Element *cur_element;

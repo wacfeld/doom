@@ -2,7 +2,7 @@ CC = gcc
 CFLAGS = -g -MMD -Wall -Wshadow -lncurses
 EXEC = doom
 LIBS = 
-OBJECTS = doom.o element.o misc.o
+OBJECTS = doom.o element.o misc.o input.o
 DEPENDS = ${OBJECTS:.o=.d}
 ${EXEC}: ${OBJECTS}
 	${CC} ${OBJECTS} ${CFLAGS} -o ${EXEC} ${LIBS}

@@ -21,7 +21,8 @@ typedef struct element
 Element *makeElement(Element *parent, Type type, char *s);
 char *element2str(Element *e);
 
-Element* leftOf(Element *e);
+Element *leftOf(Element *e);
+Element *rightOf(Element *e);
 
 // state variables
 Element *root;

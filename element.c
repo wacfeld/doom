@@ -1,19 +1,6 @@
 #include "element.h"
 #include "misc.h"
 
-typedef struct element
-{
-  Type type;
-
-  Element *parent;
-
-  int nch;
-  int maxch;
-  struct element **children;
-
-  char *s;
-} Element;
-
 Element *makeElement(Element *parent, Type type, char *s)
 {
   Element *e = malloc(sizeof(Element));
@@ -50,15 +37,69 @@ Element *makeElement(Element *parent, Type type, char *s)
   else if(type == SYMB)
   {
     e->s = s;
+    e->nch = 0;
   }
 
   return e;
 }
 
+int getIndex(Element *parent, Element *child)
+{
+  for(int i = 0; i < parent->nch; i++)
+  {
+    if(child == parent->children[i])
+      return i;
+  }
+
+  return -1;
+}
+
+Element *leftOf(Element *e)
+{
+  Element *parent = e->parent;
+  // if no parent, return original element
+  if(parent == NULL)
+    return e;
+
+  int i = getIndex(parent, e);
+
+  // if first child, TODO
+  if(i == 0)
+  {
+    return e;
+  }
+
+  else
+  {
+    return parent->children[i-1];
+  }
+}
+
+Element *rightOf(Element *e)
+{
+  Element *parent = e->parent;
+  // if no parent, return original element
+  if(parent == NULL)
+    return e;
+
+  int i = getIndex(parent, e);
+  
+  // if last child, TODO
+  if(i == parent->nch-1)
+  {
+    return e;
+  }
+
+  else
+  {
+    return parent->children[i+1];
+  }
+}
+
 char *highlight(char *s)
 {
   char *t;
-  asprintf(&t, "\\xcolor{green}{%s}", s);
+  asprintf(&t, "\\textcolor{green}{%s}", s);
   free(s);
   return t;
 }

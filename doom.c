@@ -12,9 +12,36 @@
 #include "misc.h"
 #include "element.h"
 
-void handle_key(unsigned char c)
+void handle_key(unsigned char key)
 {
-  
+  if(key >= 128)
+    return;
+
+  // left
+  else if(key == 'h')
+  {
+    
+  }
+
+  // right
+  else if(key == 'l')
+  {
+    
+  }
+
+  // descend
+  else if(key == 'j')
+  {
+    if(cur->nch > 0)
+      cur = cur->children[0];
+  }
+
+  // ascend
+  else if(key == 'k')
+  {
+    if(cur->parent != NULL)
+      cur = cur->parent;
+  }
 }
 
 int main(int argc, char **argv)

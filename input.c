@@ -30,11 +30,12 @@ void handle_insert(unsigned char key)
   if(key == 27) // escape
   {
     mode = NORMAL;
+    cur_element = delete(cur_element);
   }
 
   else if(is_special(key))
   {
-     // TODO
+     
   }
 
   else
@@ -52,6 +53,11 @@ void handle_normal(unsigned char key)
   if(key == 'i')
   {
     mode = INSERT;
+    char *s;
+    asprintf(&s, "\\_");
+    Element *blank = makeElement(NULL, SYMB, s);
+    insertLeft(blank, cur_element);
+    cur_element = blank;
   }
 
   // left

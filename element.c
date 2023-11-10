@@ -55,7 +55,7 @@ void destroyElement(Element *e)
   free(e->children);
   
   // destroy the string
-  free(e->s);
+  //free(e->s);
 }
 
 int getIndex(Element *parent, Element *child)
@@ -111,6 +111,32 @@ Element *rightOf(Element *e)
   }
 }
 
+// returns the element that takes the place of e
+Element *delete(Element *e)
+{
+  Element *parent = e->parent;
+  if(parent == NULL)
+    return cur_element;
+
+  int ind = getIndex(parent, e);
+  if(ind < 0)
+    return cur_element;
+
+  destroyElement(e);
+  for(int i = ind; i < parent->nch-1; i++)
+  {
+    parent->children[i] = parent->children[i+1];
+  }
+
+  parent->nch--;
+  if(parent->nch == 0)
+    return parent;
+  else if(parent->nch <= ind)
+    return(parent->children[parent->nch-1]);
+  else
+    return parent->children[ind];
+}
+
 void insertLeft(Element *new, Element *old)
 {
   Element *parent = old->parent;
@@ -128,6 +154,7 @@ void insertLeft(Element *new, Element *old)
       old->children[0] = new;
       old->nch++;
       new->parent = old;
+      cur_element = new;
     }
 
     else
@@ -159,8 +186,6 @@ void insertLeft(Element *new, Element *old)
     // reparent new element
     new->parent = parent;
   }
-
-  cur_element = new;
 }
 
 char *highlight(char *s)

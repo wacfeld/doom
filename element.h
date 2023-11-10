@@ -26,6 +26,9 @@ Element *rightOf(Element *e);
 
 void insertLeft(Element *new, Element *old);
 
+void destroyElement(Element *e);
+Element *delete(Element *e);
+
 // state variables
 Element *root;
 Element *cur_element;

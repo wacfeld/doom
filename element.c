@@ -96,6 +96,11 @@ Element *rightOf(Element *e)
   }
 }
 
+void insertLeft(Element *e)
+{
+  
+}
+
 char *highlight(char *s)
 {
   char *t;
@@ -149,7 +154,7 @@ char *element2str(Element *e)
     s = "unknown";
   }
 
-  if(e == cur)
+  if(e == cur_element)
     return highlight(s);
   else
     return s;

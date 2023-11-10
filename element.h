@@ -26,6 +26,6 @@ Element *rightOf(Element *e);
 
 // state variables
 Element *root;
-Element *cur;
+Element *cur_element;
 
 #endif

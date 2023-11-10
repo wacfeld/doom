@@ -42,7 +42,7 @@ int main(int argc, char **argv)
 
   // root element is a list
   root = makeElement(NULL, LIST, NULL);
-  cur = root;
+  cur_element = root;
 
   pid_t viewer_pid = -1;
 

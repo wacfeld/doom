@@ -26,10 +26,17 @@ int is_special(unsigned char c)
 
 void handle_insert(unsigned char key)
 {
-  if(is_special(key))
+  // normal
+  if(key == 27) // escape
   {
-    
+    mode = NORMAL;
   }
+
+  else if(is_special(key))
+  {
+     // TODO
+  }
+
   else
   {
     char *s;
@@ -41,8 +48,14 @@ void handle_insert(unsigned char key)
 
 void handle_normal(unsigned char key)
 {
+  // insert
+  if(key == 'i')
+  {
+    mode = INSERT;
+  }
+
   // left
-  if(key == 'h')
+  else if(key == 'h')
   {
     cur_element = leftOf(cur_element);
   }

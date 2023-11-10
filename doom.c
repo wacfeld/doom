@@ -36,9 +36,9 @@ int main(int argc, char **argv)
 
   init_ncurses();
 
-  int bufmax = 10;
-  char *buf = malloc(bufmax);
-  *buf = '\0';
+  //int bufmax = 10;
+  //char *buf = malloc(bufmax);
+  //*buf = '\0';
 
   // root element is a list
   root = makeElement(NULL, LIST, NULL);
@@ -48,25 +48,25 @@ int main(int argc, char **argv)
 
   while(1)
   {
-    // print buffer & info
-    mvprintw(0,0, buf);
-    mvprintw(1,0,texfname);
-    
     // get input from user
     unsigned char c = getch();
     erase();
-    mvprintw(10,0,"the CODE RECEIVED is %d",c);
-    if(c >= 128)
-      continue;
+    //mvprintw(10,0,"the CODE RECEIVED is %d",c);
 
-    // append to buffer & write to file
-    buf = append(buf, c, &bufmax);
-    writef(texfname, "%s%s%s", latex_header, buf, latex_footer);
+    handle_key(c);
+    char *text = element2str(root);
+    
+    mvprintw(0,0, text);
+    mvprintw(1,0, mode == NORMAL ? "NORMAL" : "INSERT");
+
+    //// write to file
+    writef(texfname, "%s%s%s", latex_header, text, latex_footer);
+    free(text);
 
     // build
     char *out;
     int code = build(&out);
-    mvprintw(3,0,"pdflatex %d", code);
+    mvprintw(2,0,"pdflatex exits with %d", code);
 
     // allow viewer to exit if something closes it
     int status;
@@ -82,7 +82,6 @@ int main(int argc, char **argv)
     else
     {
       viewer_pid = start_viewer();
-      mvprintw(6,0,"%d",viewer_pid);
     }
   }
 

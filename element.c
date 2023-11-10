@@ -13,7 +13,7 @@ Element *makeElement(Element *parent, Type type, char *s)
   if(type == LIST)
   {
     e->nch = 0;
-    e->maxch = 1;
+    e->maxch = 4;
     e->children = malloc(sizeof(Element*));
   }
 
@@ -113,13 +113,27 @@ Element *rightOf(Element *e)
 
 void insertLeft(Element *new, Element *old)
 {
+  mvprintw(4,0,"hi");
   Element *parent = old->parent;
 
   // if root, drop a level down and insert
   if(parent == NULL)
   {
-    assert(old->nch > 0);
-    insertLeft(new, old->children[0]);
+    if(old->nch == 0)
+    {
+      if(old->maxch < 1)
+      {
+        old->maxch = 4;
+        old->children = malloc(sizeof(Element*) * old->maxch);
+      }
+      old->children[0] = new;
+      old->nch++;
+    }
+
+    else
+    {
+      insertLeft(new, old->children[0]);
+    }
   }
 
   else
@@ -167,7 +181,9 @@ char *element2str(Element *e)
 
     for(int i = 0; i < e->nch; i++)
     {
-      s = concat(s, element2str(e->children[i]), &max);
+      char *c = element2str(e->children[i]);
+      s = concat(s, c, &max);
+      free(c);
     }
   }
 
@@ -175,6 +191,7 @@ char *element2str(Element *e)
   {
     char *inner = element2str(e->children[0]);
     asprintf(&s, "\\begin{equation} %s \\end{equation}", inner);
+    free(inner);
   }
 
   else if(t == FRAC)
@@ -182,22 +199,25 @@ char *element2str(Element *e)
     char *c1 = element2str(e->children[0]);
     char *c2 = element2str(e->children[1]);
     asprintf(&s, "\\frac{%s}{%s}", c1, c2);
+    free(c1);
+    free(c2);
   }
 
   else if(t == SQRT)
   {
     char *inner = element2str(e->children[0]);
     asprintf(&s, "\\sqrt{%s}", inner);
+    free(inner);
   }
 
   else if(t == SYMB)
   {
-    s = e->s;
+    asprintf(&s, "%s", e->s);
   }
 
   else
   {
-    s = "unknown";
+    asprintf(&s, "unknown");
   }
 
   if(e == cur_element)

@@ -107,7 +107,6 @@ int build(char **output)
 {
   char *cmd;
   asprintf(&cmd, "pdflatex -halt-on-error %s 2>&1", texfname);
-  mvprintw(2,0,cmd);
   
   FILE *fp = popen(cmd, "r");
 

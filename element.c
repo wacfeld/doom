@@ -1,3 +1,5 @@
+#include <assert.h>
+
 #include "element.h"
 #include "misc.h"
 
@@ -96,9 +98,37 @@ Element *rightOf(Element *e)
   }
 }
 
-void insertLeft(Element *e)
+void insertLeft(Element *new, Element *old)
 {
-  
+  Element *parent = old->parent;
+
+  // if root, drop a level down and insert
+  if(parent == NULL)
+  {
+    assert(old->nch > 0);
+    insertLeft(new, old->children[0]);
+  }
+
+  else
+  {
+    // if not enough room, reallocate double
+    if(parent->nch + 1 > parent->maxch)
+    {
+      parent->maxch *= 2;
+      parent->children = realloc(parent->children, sizeof(Element*) * parent->maxch);
+    }
+      
+    // shift stuff over
+    int oldind = getIndex(parent, old);
+    for(int i = parent->nch; i > oldind; i--)
+    {
+      parent->children[i] = parent->children[i-1];
+    }
+
+    // insert & increment length
+    parent->children[oldind] = new;
+    parent->nch++;
+  }
 }
 
 char *highlight(char *s)

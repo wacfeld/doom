@@ -2,6 +2,7 @@
 
 char latex_header[] =
   "\\documentclass{article}\n"
+  "\\usepackage{xcolor}"
   "\\begin{document}\n";
 
 char latex_footer[] = "\n\\end{document}\n";

@@ -12,6 +12,14 @@
 #include "misc.h"
 #include "element.h"
 
+// state variables
+Element *root;
+Element *cur;
+
+void handle_key(unsigned char c)
+{
+  
+}
 
 int main(int argc, char **argv)
 {
@@ -39,6 +47,10 @@ int main(int argc, char **argv)
   int bufmax = 10;
   char *buf = malloc(bufmax);
   *buf = '\0';
+
+  // root element is a list
+  root = makeElement(NULL, LIST, NULL);
+  cur = root;
 
   pid_t viewer_pid = -1;
 

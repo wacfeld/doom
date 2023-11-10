@@ -14,7 +14,7 @@ Element *makeElement(Element *parent, Type type, char *s)
   {
     e->nch = 0;
     e->maxch = 4;
-    e->children = malloc(sizeof(Element*));
+    e->children = malloc(e->maxch*sizeof(Element*));
   }
 
   // a EQN contains one LIST
@@ -113,7 +113,6 @@ Element *rightOf(Element *e)
 
 void insertLeft(Element *new, Element *old)
 {
-  mvprintw(4,0,"hi");
   Element *parent = old->parent;
 
   // if root, drop a level down and insert
@@ -128,6 +127,7 @@ void insertLeft(Element *new, Element *old)
       }
       old->children[0] = new;
       old->nch++;
+      new->parent = old;
     }
 
     else
@@ -159,6 +159,8 @@ void insertLeft(Element *new, Element *old)
     // reparent new element
     new->parent = parent;
   }
+
+  cur_element = new;
 }
 
 char *highlight(char *s)

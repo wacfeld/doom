@@ -58,15 +58,17 @@ int main(int argc, char **argv)
     
     mvprintw(0,0, text);
     mvprintw(1,0, mode == NORMAL ? "NORMAL" : "INSERT");
+    mvprintw(2,0, "%p", cur_element);
+    refresh();
 
-    //// write to file
+    // write to file
     writef(texfname, "%s%s%s", latex_header, text, latex_footer);
     free(text);
 
     // build
     char *out;
     int code = build(&out);
-    mvprintw(2,0,"pdflatex exits with %d", code);
+    mvprintw(3,0,"pdflatex exits with %d", code);
 
     // allow viewer to exit if something closes it
     int status;

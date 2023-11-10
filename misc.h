@@ -29,18 +29,18 @@ char *auxfname;
 char *logfname;
 
 
-char *concat(char *s1, const char *s2, int *max)   ;
-char *append(char *s, char c, int *max)            ;
-void init_dir()                                    ;
-void terminate_dir()                               ;
-void init_ncurses()                                ;
-void terminate_ncurses()                           ;
-void writef(char *fname, const char *fmt, ...)     ;
-int build(char **output)                           ;
-pid_t start_viewer()                               ;
-int viewer_alive(pid_t pid)                        ;
-void update_viewer(pid_t pid)                      ;
-void cleanup()                                     ;
-void handle_sigint(int sig)                        ;
+char *concat(char *s1, const char *s2, int *max);
+char *append(char *s, char c, int *max);
+void init_dir();
+void terminate_dir();
+void init_ncurses();
+void terminate_ncurses();
+void writef(char *fname, const char *fmt, ...);
+int build(char **output);
+pid_t start_viewer();
+int viewer_alive(pid_t pid);
+void update_viewer(pid_t pid);
+void cleanup();
+void handle_sigint(int sig);
 
 #endif

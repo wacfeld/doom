@@ -12,10 +12,6 @@
 #include "misc.h"
 #include "element.h"
 
-// state variables
-Element *root;
-Element *cur;
-
 void handle_key(unsigned char c)
 {
   

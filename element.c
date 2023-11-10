@@ -55,62 +55,61 @@ Element *makeElement(Element *parent, Type type, char *s)
   return e;
 }
 
-char *highlight(Element *e)
+char *highlight(char *s)
 {
-  char *inner = element2str(e);
-  char *s;
-  asprintf(&s, "\\xcolor{green}{%s}", inner);
-  return s;
+  char *t;
+  asprintf(&t, "\\xcolor{green}{%s}", s);
+  free(s);
+  return t;
 }
 
 char *element2str(Element *e)
 {
   Type t = e->type;
 
+  char *s;
   if(t == LIST)
   {
     int max = 1;
-    char *s = calloc(max, 1);
+    s = calloc(max, 1);
 
     for(int i = 0; i < e->nch; i++)
     {
       s = concat(s, element2str(e->children[i]), &max);
     }
-    return s;
   }
 
   else if(t == EQN)
   {
-    char *s;
     char *inner = element2str(e->children[0]);
     asprintf(&s, "\\begin{equation} %s \\end{equation}", inner);
-    return s;
   }
 
   else if(t == FRAC)
   {
-    char *s;
     char *c1 = element2str(e->children[0]);
     char *c2 = element2str(e->children[1]);
     asprintf(&s, "\\frac{%s}{%s}", c1, c2);
-    return s;
   }
 
   else if(t == SQRT)
   {
-    char *s;
     char *inner = element2str(e->children[0]);
     asprintf(&s, "\\sqrt{%s}", inner);
-    return s;
   }
 
   else if(t == SYMB)
   {
-    return e->s;
+    s = e->s;
   }
 
   else
   {
-    return "unknown";
+    s = "unknown";
   }
+
+  if(e == cur)
+    return highlight(s);
+  else
+    return s;
 }

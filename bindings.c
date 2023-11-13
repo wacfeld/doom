@@ -1,6 +1,7 @@
 //vim:fdm=marker
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 
 #include "bindings.h"
 
@@ -138,4 +139,28 @@ static int cmp(const void *a, const void *b)
 void sortBindings()
 {
   qsort(bindings, nbindings, sizeof(bindings[0]), cmp);
+}
+
+// returns the string that the input combination maps to,
+// or NULL if not found
+// uses binary search
+char *getBinding(char *input)
+{
+  int lo=0, hi=nbindings, mid; // lo is inclusive, hi is exclusive
+  
+  while(lo < hi)
+  {
+    printf("%d %d\n", lo, hi);
+    mid = (lo+hi)/2;
+    int c = strcmp(input, bindings[mid][0]);
+
+    if(c < 0)
+      hi = mid;
+    else if(c > 0)
+      lo = mid+1;
+    else
+      return bindings[mid][1];
+  }
+
+  return NULL;
 }

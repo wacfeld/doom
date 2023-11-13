@@ -19,6 +19,21 @@ int main(int argc, char **argv)
   signal(SIGINT, handle_sigint);
 
   sortBindings();
+
+  // char s[100];
+  // while(fgets(s, 100, stdin) != NULL)
+  // {
+  //   if(strlen(s))
+  //   {
+  //     s[strlen(s)-1] = 0;
+  //   }
+  //   char *res = getBinding(s);
+  //   if(res)
+  //     puts(res);
+  //   else
+  //     puts("Not found");
+  // }
+
   // for(int i = 0; i < nbindings; i++)
   // {
   //   printf("%s %s\n", bindings[i][0], bindings[i][1]);

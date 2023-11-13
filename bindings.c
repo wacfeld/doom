@@ -150,7 +150,6 @@ char *getBinding(char *input)
   
   while(lo < hi)
   {
-    printf("%d %d\n", lo, hi);
     mid = (lo+hi)/2;
     int c = strcmp(input, bindings[mid][0]);
 

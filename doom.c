@@ -12,10 +12,17 @@
 #include "misc.h"
 #include "element.h"
 #include "input.h"
+#include "bindings.h"
 
 int main(int argc, char **argv)
 {
   signal(SIGINT, handle_sigint);
+
+  sortBindings();
+  // for(int i = 0; i < nbindings; i++)
+  // {
+  //   printf("%s %s\n", bindings[i][0], bindings[i][1]);
+  // }
 
   // if(argc <= 1)
   // {

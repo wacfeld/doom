@@ -1,6 +1,8 @@
 //vim:fdm=marker
-#include "bindings.h"
+#include <stdlib.h>
+#include <string.h>
 
+#include "bindings.h"
 
 char *bindings[][2] = {
   // lowercase letters{{{1
@@ -123,3 +125,17 @@ char *bindings[][2] = {
   {"->", "\\to "},
   {"<-", "\\gets "},
 };
+
+const int nbindings = sizeof(bindings) / sizeof(bindings[0]);
+
+static int cmp(const void *a, const void *b)
+{
+  return strcmp(((char *const *) a)[0], ((char *const *) b)[0]);
+}
+
+// sort the bindings array by first entry in lexicographic order,
+// so that they can looked-up efficiently
+void sortBindings()
+{
+  qsort(bindings, nbindings, sizeof(bindings[0]), cmp);
+}
